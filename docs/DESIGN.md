@@ -24,10 +24,7 @@ Other contracts and agents read `is_halted(target_id)` and refuse to act. HaltGa
 
 ## Lifecycle
 
-text
 NONE → REGISTERED → EVIDENCE → ADJUDICATED
-                      (CONFIRMED → halted)
-                      (CLEAR / INCONCLUSIVE → not halted)
 
 ## Core API
 

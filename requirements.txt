@@ -1,0 +1,2 @@
+# Structural tests: stdlib only.
+# For gltest: follow pins at docs.genlayer.com

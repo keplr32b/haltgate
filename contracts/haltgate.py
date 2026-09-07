@@ -2,6 +2,7 @@
 """
 HaltGate — evidence-gated emergency halt flag for GenLayer.
 Autonomous Protocols: prove exploit via public URL → consensus → is_halted.
+Owner may clear a halt (ops recovery).
 """
 
 from genlayer import *
@@ -52,7 +53,6 @@ def _host_of(url: str) -> str:
 class HaltGate(gl.Contract):
     owner: Address
     allowed_hosts: TreeMap[str, bool]
-    # per target_id
     registered: TreeMap[str, bool]
     criteria_of: TreeMap[str, str]
     evidence_url_of: TreeMap[str, str]
@@ -172,6 +172,17 @@ class HaltGate(gl.Contract):
         self.halted_of[tid] = halted
         self.adjudicated_of[tid] = True
         return verdict
+
+    @gl.public.write
+    def owner_clear_halt(self, target_id: str) -> None:
+        """Ops recovery: owner clears halt flag. Registration kept."""
+        require(gl.message.sender_address == self.owner, "only owner")
+        tid = (target_id or "").strip()
+        require(self.registered.get(tid, False) is True, "unknown target")
+        require(self.halted_of.get(tid, False) is True, "not halted")
+        self.halted_of[tid] = False
+        self.verdict_of[tid] = "CLEARED_BY_OWNER"
+        self.note_of[tid] = "owner cleared halt"
 
     @gl.public.view
     def is_halted(self, target_id: str) -> bool:

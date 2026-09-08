@@ -6,6 +6,7 @@ Dual-source evidence, challenge window, watch recheck, owner clear (ops).
 
 from genlayer import *
 import json
+import time
 
 
 try:
@@ -13,8 +14,7 @@ try:
 except Exception:
     _UserError = Exception
 
-# challenge window length in seconds (Studionet-friendly demo: 300 = 5 min)
-CHALLENGE_SECS = u256(300)
+CHALLENGE_SECS = 300
 
 
 def require(cond: bool, msg: str) -> None:
@@ -37,6 +37,10 @@ def parse_json_response(text: str) -> dict:
     if start != -1 and end != -1:
         t = t[start : end + 1]
     return json.loads(t)
+
+
+def _now() -> u256:
+    return u256(int(time.time()))
 
 
 def _host_of(url: str) -> str:
@@ -198,7 +202,7 @@ class HaltGate(gl.Contract):
             self.halted_of[tid] = True
             if open_challenge:
                 self.challenge_open_of[tid] = True
-                self.challenge_deadline_of[tid] = gl.block.timestamp + CHALLENGE_SECS
+                self.challenge_deadline_of[tid] = _now() + u256(CHALLENGE_SECS)
                 self.finalized_of[tid] = False
             else:
                 self.challenge_open_of[tid] = False
@@ -244,13 +248,12 @@ class HaltGate(gl.Contract):
         require(self.halted_of.get(tid, False) is True, "not halted")
         require(self.challenge_open_of.get(tid, False) is True, "challenge closed")
         require(self.finalized_of.get(tid, False) is not True, "already finalized")
-        require(gl.block.timestamp <= self.challenge_deadline_of.get(tid, u256(0)), "challenge window elapsed")
+        require(_now() <= self.challenge_deadline_of.get(tid, u256(0)), "challenge window elapsed")
         u = (url or "").strip()
         host = _host_of(u)
         require(self.allowed_hosts.get(host, False) is True, "host not allowed: " + host)
         criteria = self.criteria_of.get(tid, "")
         result = self._run_judgment(criteria, [u])
-        # challenge uses single URL; CLEAR lifts halt; CONFIRMED keeps halt
         return self._apply_verdict(tid, result["verdict"], result["note"], open_challenge=False)
 
     @gl.public.write
@@ -259,7 +262,7 @@ class HaltGate(gl.Contract):
         require(self.registered.get(tid, False) is True, "unknown target")
         require(self.halted_of.get(tid, False) is True, "not halted")
         require(self.challenge_open_of.get(tid, False) is True, "challenge not open")
-        require(gl.block.timestamp > self.challenge_deadline_of.get(tid, u256(0)), "window still open")
+        require(_now() > self.challenge_deadline_of.get(tid, u256(0)), "window still open")
         self.challenge_open_of[tid] = False
         self.finalized_of[tid] = True
 

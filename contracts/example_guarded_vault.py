@@ -32,7 +32,7 @@ class ExampleGuardedVault(gl.Contract):
 
     def _ensure_not_halted(self) -> None:
         hg = gl.get_contract_at(self.haltgate_addr)
-        halted = hg.is_halted(target_id=self.target_id)
+        halted = hg.view().is_halted(self.target_id)
         require(halted is not True, "target halted by HaltGate")
 
     @gl.public.write
@@ -43,14 +43,13 @@ class ExampleGuardedVault(gl.Contract):
 
     @gl.public.write
     def withdraw(self) -> str:
-        """Same freeze gate — demo FROZEN outflows."""
         self._ensure_not_halted()
         return "withdraw_ok"
 
     @gl.public.view
     def status(self) -> str:
         hg = gl.get_contract_at(self.haltgate_addr)
-        halted = hg.is_halted(target_id=self.target_id)
+        halted = hg.view().is_halted(self.target_id)
         if halted is True:
             return "FROZEN"
         return "ACTIVE"

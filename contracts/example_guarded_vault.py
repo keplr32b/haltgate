@@ -1,7 +1,7 @@
 # { "Depends": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6" }
 """
-ExampleGuardedVault — demo consumer of HaltGate.
-Withdraw / act only if HaltGate.is_halted(target_id) is false.
+ExampleGuardedVault — demo integrator for HaltGate.
+Privileged actions revert while is_halted(target_id) is true.
 """
 
 from genlayer import *
@@ -19,35 +19,41 @@ def require(cond: bool, msg: str) -> None:
 
 
 class ExampleGuardedVault(gl.Contract):
-    owner: Address
-    haltgate: Address
+    haltgate_addr: Address
     target_id: str
-    action_count: u256
+    acts: u256
 
     def __init__(self, haltgate_addr: str, target_id: str):
-        self.owner = gl.message.sender_address
-        self.haltgate = Address(haltgate_addr)
+        self.haltgate_addr = Address(haltgate_addr)
         tid = (target_id or "").strip()
         require(1 <= len(tid) <= 64, "bad target_id")
         self.target_id = tid
-        self.action_count = u256(0)
+        self.acts = u256(0)
 
     def _ensure_not_halted(self) -> None:
-        # Read HaltGate view: is_halted(target_id)
-        other = gl.get_contract_at(self.haltgate)
-        halted = other.view().is_halted(self.target_id)
+        hg = gl.get_contract_at(self.haltgate_addr)
+        halted = hg.is_halted(target_id=self.target_id)
         require(halted is not True, "target halted by HaltGate")
 
     @gl.public.write
     def act(self) -> str:
-        """Sample privileged action — blocked when target is halted."""
         self._ensure_not_halted()
-        self.action_count += u256(1)
+        self.acts = self.acts + u256(1)
         return "ok"
 
+    @gl.public.write
+    def withdraw(self) -> str:
+        """Same freeze gate — demo FROZEN outflows."""
+        self._ensure_not_halted()
+        return "withdraw_ok"
+
     @gl.public.view
-    def get_action_count(self) -> u256:
-        return self.action_count
+    def status(self) -> str:
+        hg = gl.get_contract_at(self.haltgate_addr)
+        halted = hg.is_halted(target_id=self.target_id)
+        if halted is True:
+            return "FROZEN"
+        return "ACTIVE"
 
     @gl.public.view
     def get_target_id(self) -> str:
@@ -55,8 +61,8 @@ class ExampleGuardedVault(gl.Contract):
 
     @gl.public.view
     def get_haltgate(self) -> Address:
-        return self.haltgate
+        return self.haltgate_addr
 
     @gl.public.view
-    def get_owner(self) -> Address:
-        return self.owner
+    def get_acts(self) -> u256:
+        return self.acts

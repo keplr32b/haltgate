@@ -1,42 +1,43 @@
 # HaltGate - Studionet E2E
 
-## Canonical HaltGate (v2)
+## Canonical HaltGate
 
 | Item | Value |
 |------|--------|
-| Contract | [`0x67b8AAB3caD42b55eF2Fe7fE72fF33CF8413E27A`](https://explorer-studio.genlayer.com/address/0x67b8AAB3caD42b55eF2Fe7fE72fF33CF8413E27A) |
-| Deploy | [`0x2f8496131e3f826c6c197a172fbc6c83f34761bc023c972db8bc1587150d6201`](https://explorer-studio.genlayer.com/tx/0x2f8496131e3f826c6c197a172fbc6c83f34761bc023c972db8bc1587150d6201) |
-| Features | Evidence consensus · `is_halted` · `owner_clear_halt` |
+| Contract | [`0x577EE00131F183C745e9f9a19B306d7845aF9658`](https://explorer-studio.genlayer.com/address/0x577EE00131F183C745e9f9a19B306d7845aF9658) |
+| Deploy | [`0xb4133350dd0408e3a8a34de65ef61a8b9bce23039f020471b70285f9ba888762`](https://explorer-studio.genlayer.com/tx/0xb4133350dd0408e3a8a34de65ef61a8b9bce23039f020471b70285f9ba888762) |
 
-## Smoke matrix (v2)
+Features: dual-source evidence (1–2 URLs) · challenge window (`time.time` deadline) · watch + `recheck` · `owner_clear_halt` · closed verdicts CONFIRMED / CLEAR / INCONCLUSIVE
+
+## Smoke matrix (live)
 
 | Step | Result |
 |------|--------|
-| allow_host docs.genlayer.com + rekt.news | ok |
-| vault-1 + https://docs.genlayer.com → adjudicate | **CLEAR** · is_halted false |
-| exploit-1 + https://rekt.news/kiichain-rekt → adjudicate | **CONFIRMED** · is_halted true |
-| owner_clear_halt(exploit-1) | ok · is_halted **false** |
+| allow_host `docs.genlayer.com` + `rekt.news` | ok |
+| `vault-1` + https://docs.genlayer.com → adjudicate | **CLEAR** · is_halted false |
+| `exploit-1` + https://rekt.news/kiichain-rekt → adjudicate | **CONFIRMED** · is_halted true · challenge open |
+| challenge `exploit-1` with https://docs.genlayer.com | **CLEAR** · is_halted **false** (halt lifted) |
 
-## Earlier integration demos (v1 HaltGate)
+## Earlier integration demos (prior HaltGate instance)
 
-These prove the consumer pattern against a prior HaltGate instance (same API).
+Same consumer pattern: `is_halted` gates `act()`.
 
 | Role | Address |
 |------|---------|
-| HaltGate v1 | [`0xD1dC70c83046f99ae2813D311272Cc8DDEa87740`](https://explorer-studio.genlayer.com/address/0xD1dC70c83046f99ae2813D311272Cc8DDEa87740) |
+| Prior HaltGate | [`0xD1dC70c83046f99ae2813D311272Cc8DDEa87740`](https://explorer-studio.genlayer.com/address/0xD1dC70c83046f99ae2813D311272Cc8DDEa87740) |
 | Consumer blocked | [`0x34973C101915525797a3A850F3C36A771b33A2C9`](https://explorer-studio.genlayer.com/address/0x34973C101915525797a3A850F3C36A771b33A2C9) |
 | Consumer allowed | [`0x0D04c7FFb279340cfa053Debe54e07bEC631bAf5`](https://explorer-studio.genlayer.com/address/0x0D04c7FFb279340cfa053Debe54e07bEC631bAf5) |
 
-| Case | Tx / outcome |
-|------|----------------|
-| Host reject example.com | [`0x3e419d4e…`](https://explorer-studio.genlayer.com/tx/0x3e419d4eccbccf0d5f32141d69b168b5bd2d7e8336a6986cf42672635b421166) |
-| CONFIRMED kiichain | [`0x2ed2c095…`](https://explorer-studio.genlayer.com/tx/0x2ed2c095d71144f14dcff91b0776148b505683389f7f4e539ec523e3f35b6d88) |
-| act() halted | [`0x1923260e…`](https://explorer-studio.genlayer.com/tx/0x1923260ec001d2fd3ab857831453edf652ca4b0e4b943dc448efc74863465d88) ERROR |
-| act() clear | [`0xf1eea18f…`](https://explorer-studio.genlayer.com/tx/0xf1eea18f93ee2299ab994e110e205074b546310944712c083be9336e27516c7c) SUCCESS ok |
+| Case | Outcome |
+|------|---------|
+| Host reject example.com | ERROR host not allowed |
+| act() when halted | ERROR target halted by HaltGate |
+| act() when clear | SUCCESS ok |
 
 ## Design checks
 
-- Comparative consensus: CONFIRMED \| CLEAR \| INCONCLUSIVE
-- Fail-closed host allowlist; empty fetch does not CONFIRMED
-- Integrators gate on `is_halted`
-- Owner may `owner_clear_halt` after CONFIRMED (ops recovery)
+- Comparative consensus on verdict label only (note non-binding)
+- Fail-closed host allowlist; empty fetch must not CONFIRMED
+- Challenge is evidence + consensus, not multi-sig vote
+- Owner clear is last-resort ops recovery
+- Integrators must opt in via `is_halted`

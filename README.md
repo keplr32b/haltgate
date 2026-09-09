@@ -13,7 +13,6 @@ HaltGate does **not** forcibly stop arbitrary bytecode. It exposes a consensus-b
 | Role | Address |
 |------|---------|
 | HaltGate | [`0x577EE00131F183C745e9f9a19B306d7845aF9658`](https://explorer-studio.genlayer.com/address/0x577EE00131F183C745e9f9a19B306d7845aF9658) |
-
 | Deploy | [`0xb4133350dd0408e3a8a34de65ef61a8b9bce23039f020471b70285f9ba888762`](https://explorer-studio.genlayer.com/tx/0xb4133350dd0408e3a8a34de65ef61a8b9bce23039f020471b70285f9ba888762) |
 
 Proven on-chain:

@@ -7,247 +7,66 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #f4f1ea;
-      --panel: #fffcf7;
-      --ink: #1a1a1a;
-      --muted: #6b6b6b;
-      --line: #e5e0d6;
-      --sidebar: #141414;
-      --side-text: #a3a3a3;
-      --halt: #c62828;
-      --halt-bg: #fdecea;
-      --clear: #2e7d32;
-      --clear-bg: #e8f5e9;
-      --amber: #f9a825;
-      --amber-bg: #fff8e1;
-      --blue: #1565c0;
-      --blue-bg: #e3f2fd;
+      --bg: #f4f1ea; --panel: #fffcf7; --ink: #1a1a1a; --muted: #6b6b6b; --line: #e5e0d6;
+      --sidebar: #141414; --side-text: #a3a3a3; --halt: #c62828; --halt-bg: #fdecea;
+      --clear: #2e7d32; --clear-bg: #e8f5e9; --amber: #f9a825; --amber-bg: #fff8e1;
+      --blue: #1565c0; --blue-bg: #e3f2fd;
     }
     * { box-sizing: border-box; margin: 0; }
-    body {
-      font-family: "IBM Plex Sans", system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--ink);
-      min-height: 100vh;
-      display: flex;
-    }
-    .sidebar {
-      width: 220px;
-      background: var(--sidebar);
-      color: #fff;
-      padding: 1.25rem 1rem;
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      margin-bottom: 2rem;
-      padding: 0.25rem 0.35rem;
-    }
-    .logo {
-      width: 28px; height: 28px;
-      border-radius: 6px;
-      background: var(--halt);
-      display: grid;
-      place-items: center;
-      font-weight: 700;
-      font-size: 0.75rem;
-    }
+    body { font-family: "IBM Plex Sans", system-ui, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; display: flex; }
+    .sidebar { width: 220px; background: var(--sidebar); color: #fff; padding: 1.25rem 1rem; flex-shrink: 0; display: flex; flex-direction: column; min-height: 100vh; }
+    .brand { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 2rem; padding: 0.25rem 0.35rem; }
+    .logo { width: 28px; height: 28px; border-radius: 6px; background: var(--halt); display: grid; place-items: center; font-weight: 700; font-size: 0.75rem; }
     .brand strong { font-size: 0.95rem; display: block; }
     .brand span { font-size: 0.65rem; color: var(--side-text); letter-spacing: 0.06em; text-transform: uppercase; }
-    .nav a {
-      display: block;
-      color: var(--side-text);
-      text-decoration: none;
-      font-size: 0.88rem;
-      padding: 0.55rem 0.65rem;
-      border-radius: 6px;
-      margin-bottom: 0.2rem;
-    }
-    .nav a.active, .nav a:hover {
-      background: rgba(255,255,255,0.08);
-      color: #fff;
-    }
-    .side-foot {
-      margin-top: auto;
-      font-size: 0.7rem;
-      color: var(--side-text);
-      padding: 0.5rem;
-      font-family: "IBM Plex Mono", monospace;
-    }
+    .nav a { display: block; color: var(--side-text); text-decoration: none; font-size: 0.88rem; padding: 0.55rem 0.65rem; border-radius: 6px; margin-bottom: 0.2rem; }
+    .nav a.active, .nav a:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .side-foot { margin-top: auto; font-size: 0.7rem; color: var(--side-text); padding: 0.5rem; font-family: "IBM Plex Mono", monospace; }
     .main { flex: 1; padding: 1.5rem 1.75rem 2.5rem; overflow-x: hidden; }
-    .top {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 1rem;
-      align-items: flex-start;
-      margin-bottom: 1.25rem;
-    }
-    .eyebrow {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 0.68rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.35rem;
-    }
+    .top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; align-items: flex-start; margin-bottom: 1.25rem; }
+    .eyebrow { font-family: "IBM Plex Mono", monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.35rem; }
     h1 { font-size: 1.55rem; font-weight: 700; letter-spacing: -0.02em; }
-    .sub { color: var(--muted); font-size: 0.92rem; max-width: 28rem; margin-top: 0.25rem; }
-    .chip {
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 0.4rem 0.75rem;
-      border-radius: 999px;
-      background: #fff;
-      border: 1px solid var(--line);
-      color: var(--clear);
-    }
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-    }
-    @media (max-width: 900px) {
-      body { flex-direction: column; }
-      .sidebar { width: 100%; min-height: auto; }
-      .metrics { grid-template-columns: repeat(2, 1fr); }
-    }
-    .metric {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 1rem;
-    }
-    .metric .n {
-      font-size: 1.75rem;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      line-height: 1;
-      margin: 0.35rem 0;
-    }
+    .sub { color: var(--muted); font-size: 0.92rem; max-width: 32rem; margin-top: 0.25rem; }
+    .chip { font-size: 0.75rem; font-weight: 600; padding: 0.4rem 0.75rem; border-radius: 999px; background: #fff; border: 1px solid var(--line); color: var(--clear); }
+    .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 1rem; }
+    @media (max-width: 900px) { body { flex-direction: column; } .sidebar { width: 100%; min-height: auto; } .metrics { grid-template-columns: repeat(2, 1fr); } }
+    .metric { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 1rem; }
+    .metric .n { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1; margin: 0.35rem 0; }
     .metric .l { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
     .metric .h { font-size: 0.75rem; color: var(--muted); margin-top: 0.35rem; }
-    .grid2 {
-      display: grid;
-      grid-template-columns: 1.4fr 1fr;
-      gap: 0.75rem;
-      margin-bottom: 0.75rem;
-    }
+    .grid2 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem; }
     @media (max-width: 900px) { .grid2 { grid-template-columns: 1fr; } }
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 1rem 1.1rem;
-    }
-    .card h2 {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: var(--muted);
-      margin-bottom: 0.85rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1.1rem; }
+    .card h2 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-bottom: 0.85rem; display: flex; justify-content: space-between; align-items: center; }
     .card h2 a { color: var(--blue); font-size: 0.75rem; text-transform: none; letter-spacing: 0; font-weight: 600; text-decoration: none; }
-    .target {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.65rem;
-      padding: 0.65rem 0;
-      border-bottom: 1px solid var(--line);
-    }
+    .target { display: flex; align-items: flex-start; gap: 0.65rem; padding: 0.65rem 0; border-bottom: 1px solid var(--line); }
     .target:last-child { border-bottom: none; }
-    .dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      margin-top: 0.35rem; flex-shrink: 0;
-    }
-    .dot.halt { background: var(--halt); }
-    .dot.clear { background: var(--clear); }
-    .dot.wait { background: var(--amber); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 0.35rem; flex-shrink: 0; }
+    .dot.halt { background: var(--halt); } .dot.clear { background: var(--clear); } .dot.wait { background: var(--amber); }
     .t-title { font-weight: 600; font-size: 0.9rem; }
     .t-id { font-family: "IBM Plex Mono", monospace; font-size: 0.72rem; color: var(--muted); }
-    .tag {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      padding: 0.2rem 0.45rem;
-      border-radius: 4px;
-      margin-left: auto;
-      white-space: nowrap;
-    }
+    .tag { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.04em; padding: 0.2rem 0.45rem; border-radius: 4px; margin-left: auto; white-space: nowrap; }
     .tag.halt { background: var(--halt-bg); color: var(--halt); }
     .tag.clear { background: var(--clear-bg); color: var(--clear); }
     .tag.adj { background: var(--blue-bg); color: var(--blue); }
     .tag.ev { background: var(--amber-bg); color: #b28704; }
-    .note {
-      background: var(--amber-bg);
-      border: 1px solid #ffe082;
-      border-radius: 10px;
-      padding: 0.85rem 1rem;
-      font-size: 0.85rem;
-      margin-bottom: 0.85rem;
-    }
+    .note { background: var(--amber-bg); border: 1px solid #ffe082; border-radius: 10px; padding: 0.85rem 1rem; font-size: 0.85rem; margin-bottom: 0.85rem; }
     .note strong { display: block; margin-bottom: 0.25rem; }
     .btn-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-    .btn {
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 0.5rem 0.75rem;
-      border-radius: 8px;
-      border: 1px solid var(--line);
-      background: #fff;
-      color: var(--ink);
-      text-decoration: none;
-    }
+    .btn { font-size: 0.8rem; font-weight: 600; padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px solid var(--line); background: #fff; color: var(--ink); text-decoration: none; }
     .btn.primary { background: var(--ink); color: #fff; border-color: var(--ink); }
-    .path {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.8rem;
-    }
-    .step {
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 0.55rem 0.7rem;
-      min-width: 5.5rem;
-    }
+    .path { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; font-size: 0.8rem; }
+    .step { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 0.55rem 0.7rem; min-width: 5rem; }
     .step b { display: block; font-size: 0.68rem; color: var(--muted); font-weight: 500; }
     .arrow { color: var(--muted); }
     .audit { list-style: none; padding: 0; }
-    .audit li {
-      display: flex;
-      gap: 0.65rem;
-      padding: 0.55rem 0;
-      border-bottom: 1px solid var(--line);
-      font-size: 0.85rem;
-    }
+    .audit li { display: flex; gap: 0.65rem; padding: 0.55rem 0; border-bottom: 1px solid var(--line); font-size: 0.85rem; }
     .audit li:last-child { border-bottom: none; }
-    .audit .time { margin-left: auto; color: var(--muted); font-size: 0.75rem; white-space: nowrap; }
-    .ico {
-      width: 22px; height: 22px; border-radius: 50%;
-      display: grid; place-items: center;
-      font-size: 0.7rem; flex-shrink: 0;
-    }
+    .ico { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 0.7rem; flex-shrink: 0; }
     .ico.g { background: var(--clear-bg); color: var(--clear); }
     .ico.r { background: var(--halt-bg); color: var(--halt); }
     .ico.b { background: var(--blue-bg); color: var(--blue); }
-    .addr {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 0.72rem;
-      word-break: break-all;
-      color: var(--muted);
-    }
+    .addr { font-family: "IBM Plex Mono", monospace; font-size: 0.72rem; word-break: break-all; color: var(--muted); }
     a.addr { color: var(--blue); text-decoration: none; }
   </style>
 </head>
@@ -255,16 +74,13 @@
   <aside class="sidebar">
     <div class="brand">
       <div class="logo">HG</div>
-      <div>
-        <strong>HaltGate</strong>
-        <span>Security signals</span>
-      </div>
+      <div><strong>HaltGate</strong><span>Security signals</span></div>
     </div>
     <nav class="nav">
       <a class="active" href="#">Overview</a>
       <a href="https://github.com/keplr32b/haltgate/blob/main/docs/DESIGN.md">Design</a>
       <a href="https://github.com/keplr32b/haltgate/blob/main/verification/studionet-e2e.md">Evidence / E2E</a>
-      <a href="https://explorer-studio.genlayer.com/address/0x67b8AAB3caD42b55eF2Fe7fE72fF33CF8413E27A">Contract detail</a>
+      <a href="https://explorer-studio.genlayer.com/address/0x577EE00131F183C745e9f9a19B306d7845aF9658">Contract detail</a>
       <a href="https://github.com/keplr32b/haltgate">GitHub</a>
     </nav>
     <div class="side-foot">STUDIONET · LIVE</div>
@@ -273,84 +89,47 @@
   <main class="main">
     <div class="top">
       <div>
-        <p class="eyebrow">GenLayer protocol · Canonical decision flag</p>
+        <p class="eyebrow">GenLayer · Autonomous Protocols</p>
         <h1>Keep the protocol deliberate.</h1>
-        <p class="sub">High-trust view of public exploit signals moving through HaltGate’s auditable decision path.</p>
+        <p class="sub">Public exploit evidence → validator consensus → is_halted. Challenge can lift a halt. Integrators freeze privileged actions.</p>
       </div>
-      <span class="chip">● Live read-only feed</span>
+      <span class="chip">● Live read-only</span>
     </div>
 
     <div class="metrics">
-      <div class="metric">
-        <div class="l">Active target halts</div>
-        <div class="n">02</div>
-        <div class="h">Owner recovery available</div>
-      </div>
-      <div class="metric">
-        <div class="l">Open investigations</div>
-        <div class="n">01</div>
-        <div class="h">Awaiting consensus</div>
-      </div>
-      <div class="metric">
-        <div class="l">Confirmed outcomes</div>
-        <div class="n">01</div>
-        <div class="h">Auditable on-chain</div>
-      </div>
-      <div class="metric">
-        <div class="l">Canonical feed</div>
-        <div class="n" style="font-size:1rem;margin-top:0.6rem;">LIVE</div>
-        <div class="h">Studionet · HaltGate v2</div>
-      </div>
+      <div class="metric"><div class="l">Smoke paths</div><div class="n">03</div><div class="h">CLEAR · CONFIRMED · challenge</div></div>
+      <div class="metric"><div class="l">Challenge</div><div class="n" style="font-size:1.1rem;margin-top:0.55rem;">OPEN</div><div class="h">Evidence re-adjudicate</div></div>
+      <div class="metric"><div class="l">Consensus</div><div class="n" style="font-size:1.1rem;margin-top:0.55rem;">LIVE</div><div class="h">Closed verdict labels</div></div>
+      <div class="metric"><div class="l">Canonical</div><div class="n" style="font-size:1rem;margin-top:0.6rem;">HG</div><div class="h">Studionet HaltGate</div></div>
     </div>
 
     <div class="grid2">
       <div class="card">
-        <h2>Target status matrix <a href="https://github.com/keplr32b/haltgate/blob/main/verification/studionet-e2e.md">View all →</a></h2>
-        <div class="target">
-          <span class="dot halt"></span>
-          <div>
-            <div class="t-title">Incident article · exploit path</div>
-            <div class="t-id">exploit-1 / exploit-demo-2 · rekt.news</div>
-          </div>
-          <span class="tag halt">HALTED</span>
-        </div>
+        <h2>Target status matrix <a href="https://github.com/keplr32b/haltgate/blob/main/verification/studionet-e2e.md">E2E →</a></h2>
         <div class="target">
           <span class="dot clear"></span>
-          <div>
-            <div class="t-title">Protocol docs · non-exploit</div>
-            <div class="t-id">vault-1 · docs.genlayer.com</div>
-          </div>
+          <div><div class="t-title">Protocol docs · non-exploit</div><div class="t-id">vault-1 · docs.genlayer.com</div></div>
           <span class="tag clear">CLEAR</span>
         </div>
         <div class="target">
-          <span class="dot wait"></span>
-          <div>
-            <div class="t-title">Disallowed host probe</div>
-            <div class="t-id">vault-2 · example.com</div>
-          </div>
-          <span class="tag ev">REJECTED</span>
+          <span class="dot halt"></span>
+          <div><div class="t-title">Incident article · exploit path</div><div class="t-id">exploit-1 · rekt.news/kiichain-rekt</div></div>
+          <span class="tag halt">CONFIRMED</span>
         </div>
         <div class="target">
           <span class="dot clear"></span>
-          <div>
-            <div class="t-title">After owner_clear_halt</div>
-            <div class="t-id">exploit-1 · recovery</div>
-          </div>
-          <span class="tag adj">CLEARED</span>
+          <div><div class="t-title">After challenge with docs evidence</div><div class="t-id">exploit-1 · challenge</div></div>
+          <span class="tag adj">UNHALTED</span>
         </div>
       </div>
-
       <div class="card">
-        <h2>Owner recovery surface</h2>
+        <h2>Operator surface</h2>
         <div class="note">
-          <strong>Halts need operator attention</strong>
-          HaltGate never clears a confirmed halt automatically. Review the case record before using owner recovery.
+          <strong>Halt is consensus-backed</strong>
+          Anyone may submit evidence; only CONFIRMED sets is_halted. Challenge uses new public evidence — not multi-sig voting. Owner clear is last-resort ops recovery.
         </div>
-        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.75rem;">
-          Evidence hosts allowlisted · Criteria sealed at register · <code>owner_clear_halt</code> is ops recovery, not a second AI appeal.
-        </p>
         <div class="btn-row">
-          <a class="btn primary" href="https://explorer-studio.genlayer.com/address/0x67b8AAB3caD42b55eF2Fe7fE72fF33CF8413E27A">Inspect canonical contract</a>
+          <a class="btn primary" href="https://explorer-studio.genlayer.com/address/0x577EE00131F183C745e9f9a19B306d7845aF9658">Inspect contract</a>
           <a class="btn" href="https://github.com/keplr32b/haltgate/blob/main/docs/DESIGN.md">Design</a>
         </div>
       </div>
@@ -358,57 +137,35 @@
 
     <div class="grid2">
       <div class="card">
-        <h2>Decision path · From signal to halt</h2>
+        <h2>Decision path</h2>
         <div class="path">
-          <div class="step"><b>01</b>Registered</div>
-          <span class="arrow">→</span>
-          <div class="step"><b>02</b>Evidence</div>
-          <span class="arrow">→</span>
-          <div class="step"><b>03</b>Adjudicated</div>
-          <span class="arrow">→</span>
-          <div class="step"><b>04</b>is_halted</div>
+          <div class="step"><b>01</b>Register</div><span class="arrow">→</span>
+          <div class="step"><b>02</b>Evidence</div><span class="arrow">→</span>
+          <div class="step"><b>03</b>Adjudicate</div><span class="arrow">→</span>
+          <div class="step"><b>04</b>Challenge</div><span class="arrow">→</span>
+          <div class="step"><b>05</b>is_halted</div>
         </div>
         <p style="margin-top:0.85rem;font-size:0.82rem;color:var(--muted);">
-          Verdict labels: <strong>CONFIRMED</strong> · <strong>CLEAR</strong> · <strong>INCONCLUSIVE</strong>. Only CONFIRMED sets the halt flag. Integrators call <code>is_halted(target_id)</code> before privileged actions.
+          Verdicts: <strong>CONFIRMED</strong> · <strong>CLEAR</strong> · <strong>INCONCLUSIVE</strong>. Integrators call <code>is_halted(target_id)</code> before privileged actions.
         </p>
       </div>
-
       <div class="card">
-        <h2>Audit stream · Recent activity</h2>
+        <h2>Audit stream</h2>
         <ul class="audit">
-          <li>
-            <span class="ico b">1</span>
-            <span>Public evidence accepted for review</span>
-          </li>
-          <li>
-            <span class="ico g">✓</span>
-            <span>Consensus outcome recorded CLEAR (docs)</span>
-          </li>
-          <li>
-            <span class="ico r">!</span>
-            <span>CONFIRMED halt after incident article</span>
-          </li>
-          <li>
-            <span class="ico r">✕</span>
-            <span>Consumer act() reverted — target halted</span>
-          </li>
-          <li>
-            <span class="ico g">✓</span>
-            <span>Consumer act() ok on CLEAR target</span>
-          </li>
+          <li><span class="ico g">✓</span><span>CLEAR on docs.genlayer.com</span></li>
+          <li><span class="ico r">!</span><span>CONFIRMED on rekt incident article</span></li>
+          <li><span class="ico g">✓</span><span>Challenge with docs → CLEAR · halt lifted</span></li>
         </ul>
       </div>
     </div>
 
     <div class="card">
-      <h2>Contract addresses</h2>
-      <p class="label" style="margin-bottom:0.25rem;">HaltGate v2 (canonical)</p>
-      <a class="addr" href="https://explorer-studio.genlayer.com/address/0x67b8AAB3caD42b55eF2Fe7fE72fF33CF8413E27A">0x67b8AAB3caD42b55eF2Fe7fE72fF33CF8413E27A</a>
-      <p class="label" style="margin:0.75rem 0 0.25rem;">Consumer blocked · Consumer allowed (pattern demos)</p>
-      <a class="addr" href="https://explorer-studio.genlayer.com/address/0x34973C101915525797a3A850F3C36A771b33A2C9">0x34973C101915525797a3A850F3C36A771b33A2C9</a>
-      <br />
-      <a class="addr" href="https://explorer-studio.genlayer.com/address/0x0D04c7FFb279340cfa053Debe54e07bEC631bAf5">0x0D04c7FFb279340cfa053Debe54e07bEC631bAf5</a>
+      <h2>Canonical contract</h2>
+      <a class="addr" href="https://explorer-studio.genlayer.com/address/0x577EE00131F183C745e9f9a19B306d7845aF9658">0x577EE00131F183C745e9f9a19B306d7845aF9658</a>
+      <p style="margin-top:0.75rem;font-size:0.82rem;color:var(--muted);">
+        Consumer pattern: <code>contracts/example_guarded_vault.py</code> — pass this HaltGate address + target_id; <code>act</code>/<code>withdraw</code> revert while halted.
+      </p>
     </div>
   </main>
 </body>
-  </html>
+</html>

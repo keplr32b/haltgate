@@ -2,20 +2,25 @@
 
 Evidence-gated **emergency halt** for GenLayer (Autonomous Protocols track).
 
-Anyone submits a public HTTPS evidence URL. Validators fetch the page and reach comparative consensus on a closed verdict (`CONFIRMED` | `CLEAR` | `INCONCLUSIVE`). Only `CONFIRMED` sets `is_halted(target_id)`. Other contracts read that flag and refuse privileged actions. The owner may clear a halt for ops recovery.
+Anyone submits public HTTPS evidence (one or two URLs). Validators fetch the pages and reach comparative consensus on a closed verdict: `CONFIRMED` | `CLEAR` | `INCONCLUSIVE`. Only `CONFIRMED` sets `is_halted(target_id)`. While a challenge window is open, anyone may submit challenge evidence and re-adjudicate; `CLEAR` lifts the halt. Integrator contracts read `is_halted` and refuse privileged actions.
 
 > Track idea: *Pauses a target contract when anyone proves an active exploit.*
 
-HaltGate does **not** forcibly stop arbitrary bytecode. It exposes a consensus-backed halt **flag**; integrators must check `is_halted` (see demo consumer).
+HaltGate does **not** forcibly stop arbitrary bytecode. It exposes a consensus-backed halt **flag**; integrators must check `is_halted`.
 
 ## Live Studionet
 
 | Role | Address |
 |------|---------|
-| **HaltGate (canonical v2)** | [`0x67b8AAB3caD42b55eF2Fe7fE72fF33CF8413E27A`](https://explorer-studio.genlayer.com/address/0x67b8AAB3caD42b55eF2Fe7fE72fF33CF8413E27A) |
-| Deploy | [`0x2f8496131e3f826c6c197a172fbc6c83f34761bc023c972db8bc1587150d6201`](https://explorer-studio.genlayer.com/tx/0x2f8496131e3f826c6c197a172fbc6c83f34761bc023c972db8bc1587150d6201) |
+| HaltGate | [`0x577EE00131F183C745e9f9a19B306d7845aF9658`](https://explorer-studio.genlayer.com/address/0x577EE00131F183C745e9f9a19B306d7845aF9658) |
 
-Proven on v2: CLEAR (docs) · CONFIRMED (rekt.news incident) · `owner_clear_halt` → not halted.
+| Deploy | [`0xb4133350dd0408e3a8a34de65ef61a8b9bce23039f020471b70285f9ba888762`](https://explorer-studio.genlayer.com/tx/0xb4133350dd0408e3a8a34de65ef61a8b9bce23039f020471b70285f9ba888762) |
+
+Proven on-chain:
+
+- CLEAR on `https://docs.genlayer.com` → not halted
+- CONFIRMED on `https://rekt.news/kiichain-rekt` → halted, challenge open
+- Challenge with docs evidence → CLEAR → halt lifted
 
 Full receipts: [`verification/studionet-e2e.md`](verification/studionet-e2e.md)
 
@@ -24,9 +29,12 @@ Full receipts: [`verification/studionet-e2e.md`](verification/studionet-e2e.md)
 | Method | Who |
 |--------|-----|
 | `allow_host` / `register_target` | Owner |
-| `submit_evidence` | Anyone |
+| `submit_evidence` (1–2 URLs) | Anyone |
 | `adjudicate` | Anyone (consensus) |
-| `owner_clear_halt` | Owner |
+| `challenge` | Anyone while challenge open |
+| `finalize_halt` | Anyone after challenge window |
+| `recheck` | Anyone if `watch_url` set |
+| `owner_clear_halt` | Owner (ops recovery) |
 | `is_halted` / `read_case` | Views |
 
 ## Integration
@@ -36,16 +44,18 @@ if HaltGate.is_halted(target_id):
     revert
 ```
 
-Demo: contracts/example_guarded_vault.py
+Demo consumer pattern: contracts/example_guarded_vault.py
 
 ## Design
-See docs/DESIGN.md.
+
+docs/DESIGN.md
 
 ## Limits
 
-- Studionet demo network, not a production SLA
-- Owner controls host allowlist and registration criteria (governance surface)
-- Owner may clear a CONFIRMED halt (owner_clear_halt); this is ops recovery, not a second AI appeal
-- Single evidence URL per adjudication cycle in v1
-- LLM judgment is point-in-time; closed verdict labels reduce wording drift
-- Not a legal determination of an exploit
+- Studionet development network, not a production SLA
+- Owner controls host allowlist and registration criteria
+- Challenge window uses transaction-pinned time (time.time); demo window 300 seconds
+- Owner may clear a halt (ops recovery, not a second AI appeal)
+- One or two evidence URLs per cycle; not a global hack radar
+- Does not forcibly stop arbitrary non-integrating contracts
+- LLM judgment is point-in-time under closed verdict labels

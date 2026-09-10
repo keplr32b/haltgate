@@ -42,7 +42,7 @@
     .target { display: flex; align-items: flex-start; gap: 0.65rem; padding: 0.65rem 0; border-bottom: 1px solid var(--line); }
     .target:last-child { border-bottom: none; }
     .dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 0.35rem; flex-shrink: 0; }
-    .dot.halt { background: var(--halt); } .dot.clear { background: var(--clear); } .dot.wait { background: var(--amber); }
+    .dot.halt { background: var(--halt); } .dot.clear { background: var(--clear); }
     .t-title { font-weight: 600; font-size: 0.9rem; }
     .t-id { font-family: "IBM Plex Mono", monospace; font-size: 0.72rem; color: var(--muted); }
     .tag { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.04em; padding: 0.2rem 0.45rem; border-radius: 4px; margin-left: auto; white-space: nowrap; }
@@ -64,8 +64,7 @@
     .ico { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 0.7rem; flex-shrink: 0; }
     .ico.g { background: var(--clear-bg); color: var(--clear); }
     .ico.r { background: var(--halt-bg); color: var(--halt); }
-    .ico.b { background: var(--blue-bg); color: var(--blue); }
-    .addr { font-family: "IBM Plex Mono", monospace; font-size: 0.72rem; word-break: break-all; color: var(--muted); }
+    .addr { font-family: "IBM Plex Mono", monospace; font-size: 0.72rem; word-break: break-all; }
     a.addr { color: var(--blue); text-decoration: none; }
   </style>
 </head>
@@ -163,10 +162,13 @@
       <h2>Canonical contracts</h2>
       <p style="font-size:0.75rem;color:var(--muted);margin-bottom:0.25rem;">HaltGate</p>
       <a class="addr" href="https://explorer-studio.genlayer.com/address/0x577EE00131F183C745e9f9a19B306d7845aF9658">0x577EE00131F183C745e9f9a19B306d7845aF9658</a>
-      <p style="font-size:0.75rem;color:var(--muted);margin:0.75rem 0 0.25rem;">Consumer CLEAR · vault-1</p>
+      <p style="font-size:0.75rem;color:var(--muted);margin:0.75rem 0 0.25rem;">Consumer CLEAR · vault-1 · ACTIVE</p>
       <a class="addr" href="https://explorer-studio.genlayer.com/address/0x46CB5F54340Bf5b975330d7611dD0be1Ad7F0927">0x46CB5F54340Bf5b975330d7611dD0be1Ad7F0927</a>
       <p style="font-size:0.75rem;color:var(--muted);margin:0.75rem 0 0.25rem;">Consumer FROZEN · exploit-freeze-1</p>
       <a class="addr" href="https://explorer-studio.genlayer.com/address/0x49820207488BCF7D2cC50F0D47dee49523da6716">0x49820207488BCF7D2cC50F0D47dee49523da6716</a>
+      <p style="margin-top:0.75rem;font-size:0.82rem;color:var(--muted);">
+        Integrators: <code>hg.view().is_halted(target_id)</code> — act/withdraw revert while halted.
+      </p>
     </div>
   </main>
 </body>

@@ -14,11 +14,13 @@ HaltGate does **not** forcibly stop arbitrary bytecode. It exposes a consensus-b
 |------|---------|
 | HaltGate | [`0x577EE00131F183C745e9f9a19B306d7845aF9658`](https://explorer-studio.genlayer.com/address/0x577EE00131F183C745e9f9a19B306d7845aF9658) |
 | Deploy | [`0xb4133350dd0408e3a8a34de65ef61a8b9bce23039f020471b70285f9ba888762`](https://explorer-studio.genlayer.com/tx/0xb4133350dd0408e3a8a34de65ef61a8b9bce23039f020471b70285f9ba888762) |
+| Consumer CLEAR (`vault-1`) | [`0x46CB5F54340Bf5b975330d7611dD0be1Ad7F0927`](https://explorer-studio.genlayer.com/address/0x46CB5F54340Bf5b975330d7611dD0be1Ad7F0927) |
+| Consumer FROZEN (`exploit-freeze-1`) | [`0x49820207488BCF7D2cC50F0D47dee49523da6716`](https://explorer-studio.genlayer.com/address/0x49820207488BCF7D2cC50F0D47dee49523da6716) |
 
 Proven on-chain:
 
-- CLEAR on `https://docs.genlayer.com` → not halted
-- CONFIRMED on `https://rekt.news/kiichain-rekt` → halted, challenge open
+- CLEAR on `https://docs.genlayer.com` → not halted → consumer ACTIVE, act/withdraw ok
+- CONFIRMED on `https://rekt.news/kiichain-rekt` → halted → consumer FROZEN, act/withdraw blocked
 - Challenge with docs evidence → CLEAR → halt lifted
 
 Full receipts: [`verification/studionet-e2e.md`](verification/studionet-e2e.md)
@@ -38,12 +40,13 @@ Full receipts: [`verification/studionet-e2e.md`](verification/studionet-e2e.md)
 
 ## Integration
 
-```text
-if HaltGate.is_halted(target_id):
-    revert
+```python
+hg = gl.get_contract_at(haltgate_addr)
+if hg.view().is_halted(target_id):
+    revert  # FROZEN
 ```
 
-Demo consumer pattern: contracts/example_guarded_vault.py
+Demo: contracts/example_guarded_vault.py (act + withdraw both gated).
 
 ## Design
 

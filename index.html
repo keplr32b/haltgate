@@ -49,7 +49,6 @@
     .tag.halt { background: var(--halt-bg); color: var(--halt); }
     .tag.clear { background: var(--clear-bg); color: var(--clear); }
     .tag.adj { background: var(--blue-bg); color: var(--blue); }
-    .tag.ev { background: var(--amber-bg); color: #b28704; }
     .note { background: var(--amber-bg); border: 1px solid #ffe082; border-radius: 10px; padding: 0.85rem 1rem; font-size: 0.85rem; margin-bottom: 0.85rem; }
     .note strong { display: block; margin-bottom: 0.25rem; }
     .btn-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
@@ -98,7 +97,7 @@
 
     <div class="metrics">
       <div class="metric"><div class="l">Smoke paths</div><div class="n">03</div><div class="h">CLEAR · CONFIRMED · challenge</div></div>
-      <div class="metric"><div class="l">Challenge</div><div class="n" style="font-size:1.1rem;margin-top:0.55rem;">OPEN</div><div class="h">Evidence re-adjudicate</div></div>
+      <div class="metric"><div class="l">Consumers</div><div class="n">02</div><div class="h">ACTIVE + FROZEN</div></div>
       <div class="metric"><div class="l">Consensus</div><div class="n" style="font-size:1.1rem;margin-top:0.55rem;">LIVE</div><div class="h">Closed verdict labels</div></div>
       <div class="metric"><div class="l">Canonical</div><div class="n" style="font-size:1rem;margin-top:0.6rem;">HG</div><div class="h">Studionet HaltGate</div></div>
     </div>
@@ -113,12 +112,12 @@
         </div>
         <div class="target">
           <span class="dot halt"></span>
-          <div><div class="t-title">Incident article · exploit path</div><div class="t-id">exploit-1 · rekt.news/kiichain-rekt</div></div>
+          <div><div class="t-title">Incident · exploit-freeze-1</div><div class="t-id">rekt.news/kiichain-rekt</div></div>
           <span class="tag halt">CONFIRMED</span>
         </div>
         <div class="target">
           <span class="dot clear"></span>
-          <div><div class="t-title">After challenge with docs evidence</div><div class="t-id">exploit-1 · challenge</div></div>
+          <div><div class="t-title">After challenge with docs</div><div class="t-id">exploit-1 · challenge</div></div>
           <span class="tag adj">UNHALTED</span>
         </div>
       </div>
@@ -126,10 +125,10 @@
         <h2>Operator surface</h2>
         <div class="note">
           <strong>Halt is consensus-backed</strong>
-          Anyone may submit evidence; only CONFIRMED sets is_halted. Challenge uses new public evidence — not multi-sig voting. Owner clear is last-resort ops recovery.
+          Anyone may submit evidence; only CONFIRMED sets is_halted. Challenge uses new public evidence — not multi-sig. Owner clear is last-resort ops recovery.
         </div>
         <div class="btn-row">
-          <a class="btn primary" href="https://explorer-studio.genlayer.com/address/0x577EE00131F183C745e9f9a19B306d7845aF9658">Inspect contract</a>
+          <a class="btn primary" href="https://explorer-studio.genlayer.com/address/0x577EE00131F183C745e9f9a19B306d7845aF9658">Inspect HaltGate</a>
           <a class="btn" href="https://github.com/keplr32b/haltgate/blob/main/docs/DESIGN.md">Design</a>
         </div>
       </div>
@@ -146,25 +145,28 @@
           <div class="step"><b>05</b>is_halted</div>
         </div>
         <p style="margin-top:0.85rem;font-size:0.82rem;color:var(--muted);">
-          Verdicts: <strong>CONFIRMED</strong> · <strong>CLEAR</strong> · <strong>INCONCLUSIVE</strong>. Integrators call <code>is_halted(target_id)</code> before privileged actions.
+          Integrators call <code>hg.view().is_halted(target_id)</code> before privileged actions.
         </p>
       </div>
       <div class="card">
         <h2>Audit stream</h2>
         <ul class="audit">
-          <li><span class="ico g">✓</span><span>CLEAR on docs.genlayer.com</span></li>
-          <li><span class="ico r">!</span><span>CONFIRMED on rekt incident article</span></li>
-          <li><span class="ico g">✓</span><span>Challenge with docs → CLEAR · halt lifted</span></li>
+          <li><span class="ico g">✓</span><span>CLEAR on docs · consumer ACTIVE</span></li>
+          <li><span class="ico r">!</span><span>CONFIRMED on rekt · consumer FROZEN</span></li>
+          <li><span class="ico r">✕</span><span>act/withdraw blocked when halted</span></li>
+          <li><span class="ico g">✓</span><span>Challenge docs → CLEAR · halt lifted</span></li>
         </ul>
       </div>
     </div>
 
     <div class="card">
-      <h2>Canonical contract</h2>
+      <h2>Canonical contracts</h2>
+      <p style="font-size:0.75rem;color:var(--muted);margin-bottom:0.25rem;">HaltGate</p>
       <a class="addr" href="https://explorer-studio.genlayer.com/address/0x577EE00131F183C745e9f9a19B306d7845aF9658">0x577EE00131F183C745e9f9a19B306d7845aF9658</a>
-      <p style="margin-top:0.75rem;font-size:0.82rem;color:var(--muted);">
-        Consumer pattern: <code>contracts/example_guarded_vault.py</code> — pass this HaltGate address + target_id; <code>act</code>/<code>withdraw</code> revert while halted.
-      </p>
+      <p style="font-size:0.75rem;color:var(--muted);margin:0.75rem 0 0.25rem;">Consumer CLEAR · vault-1</p>
+      <a class="addr" href="https://explorer-studio.genlayer.com/address/0x46CB5F54340Bf5b975330d7611dD0be1Ad7F0927">0x46CB5F54340Bf5b975330d7611dD0be1Ad7F0927</a>
+      <p style="font-size:0.75rem;color:var(--muted);margin:0.75rem 0 0.25rem;">Consumer FROZEN · exploit-freeze-1</p>
+      <a class="addr" href="https://explorer-studio.genlayer.com/address/0x49820207488BCF7D2cC50F0D47dee49523da6716">0x49820207488BCF7D2cC50F0D47dee49523da6716</a>
     </div>
   </main>
 </body>

@@ -52,6 +52,13 @@ Demo: contracts/example_guarded_vault.py (act + withdraw both gated).
 
 docs/DESIGN.md
 
+## Who uses this
+
+Vaults, agents, and protocols that **opt in**: before withdraw/act, call `is_halted(target_id)`.
+HaltGate is a shared consensus signal, not a chain-wide kill switch.
+
+Production note: treat owner as deployment governance; prefer multi-sig/timelock on `owner_clear_halt` and longer challenge windows off Studionet.
+
 ## Limits
 
 - Studionet development network, not a production SLA

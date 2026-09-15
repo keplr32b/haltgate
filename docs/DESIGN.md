@@ -1,28 +1,64 @@
-# HaltGate - Studionet E2E
+# HaltGate - Design
 
-## Canonical HaltGate
+## Thesis
 
-| Item | Value |
-|------|--------|
-| Contract | [`0x577EE00131F183C745e9f9a19B306d7845aF9658`](https://explorer-studio.genlayer.com/address/0x577EE00131F183C745e9f9a19B306d7845aF9658) |
-| Deploy | [`0xb4133350dd0408e3a8a34de65ef61a8b9bce23039f020471b70285f9ba888762`](https://explorer-studio.genlayer.com/tx/0xb4133350dd0408e3a8a34de65ef61a8b9bce23039f020471b70285f9ba888762) |
+HaltGate is a reusable GenLayer Intelligent Contract for Autonomous Protocols:
 
-Features: dual-source evidence (1–2 URLs) · challenge window · watch + `recheck` · `owner_clear_halt` · verdicts CONFIRMED / CLEAR / INCONCLUSIVE
+> Emergency halt: mark a target halted when anyone **proves** an active exploit with public HTTPS evidence under multi-validator consensus.
 
-## Smoke matrix
+Other contracts read `is_halted(target_id)` and refuse privileged actions. HaltGate does not stop arbitrary bytecode; it provides a consensus-backed halt **flag**.
 
-| Step | Result |
-|------|--------|
-| allow_host `docs.genlayer.com` + `rekt.news` | ok |
-| `vault-1` + https://docs.genlayer.com → adjudicate | **CLEAR** · is_halted false |
-| `exploit-1` + https://rekt.news/kiichain-rekt → adjudicate | **CONFIRMED** · is_halted true · challenge open |
-| challenge `exploit-1` with https://docs.genlayer.com | **CLEAR** · is_halted **false** |
+## Track fit
 
-## Design checks
+- Official idea: *Pauses a target contract when anyone proves an active exploit*
+- GenLayer-native: live HTTPS fetch + comparative consensus on closed verdict labels
 
-- Comparative consensus on verdict label only (note non-binding)
-- Fail-closed host allowlist; empty fetch must not CONFIRMED
-- Challenge = new evidence + consensus (not multi-sig)
-- Owner clear = ops recovery only
-- Integrators gate on `is_halted(target_id)`
-- Anyone may submit evidence; halt only after CONFIRMED consensus
+## Adversarial model
+
+| False outcome | Who is hurt |
+|---------------|-------------|
+| False CONFIRMED | Target/integrators freeze without real exploit |
+| False CLEAR | Exploit continues while flag stays open |
+| Forced INCONCLUSIVE | Delay without unjustified halt |
+
+Mitigations: host allowlist, empty-fetch cannot CONFIRMED, challenge window with new evidence, comparative equivalence on verdict only.
+
+## Lifecycle
+
+```text
+REGISTER (owner) → submit_evidence (anyone) → adjudicate
+  → CONFIRMED → halted + challenge window
+  → CLEAR / INCONCLUSIVE → not halted
+
+challenge (while open) → new URL → re-verdict (can CLEAR and unhalt)
+finalize_halt (after window) → challenge closed
+recheck (optional watch_url) → same judgment path
+owner_clear_halt → ops recovery only
+```
+
+## Verdicts
+
+CONFIRMED | CLEAR | INCONCLUSIVE
+Only CONFIRMED sets is_halted. Note is non-binding for equivalence.
+
+## Integration
+if haltgate.view().is_halted(target_id):
+    revert
+
+## Non-goals
+
+- Forcing non-integrating contracts
+- Multi-sig council as core (challenge is evidence + consensus)
+- Global hack radar / unlimited URLs
+- Mainnet SLA without audit and real integrators
+
+## Limits
+
+- Studionet demo; challenge window 300s for demo
+- Owner controls hosts, registration, and ops clear
+- Soft enforce; 1–2 evidence URLs per cycle
+- LLM judgment is point-in-time under closed labels
+
+## Live verification
+
+See verification/studionet-e2e.md.

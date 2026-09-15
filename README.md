@@ -50,7 +50,7 @@ Demo: contracts/example_guarded_vault.py (act + withdraw both gated).
 
 ## Design
 
-docs/DESIGN.md
+docs/DESIGN.md: https://github.com/keplr32b/haltgate/blob/main/docs%2FDESIGN.md
 
 ## Who uses this
 

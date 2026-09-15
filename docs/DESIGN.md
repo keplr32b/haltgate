@@ -25,7 +25,6 @@ Mitigations: host allowlist, empty-fetch cannot CONFIRMED, challenge window with
 
 ## Lifecycle
 
-```text
 REGISTER (owner) → submit_evidence (anyone) → adjudicate
   → CONFIRMED → halted + challenge window
   → CLEAR / INCONCLUSIVE → not halted
@@ -34,14 +33,15 @@ challenge (while open) → new URL → re-verdict (can CLEAR and unhalt)
 finalize_halt (after window) → challenge closed
 recheck (optional watch_url) → same judgment path
 owner_clear_halt → ops recovery only
-```
 
 ## Verdicts
 
 CONFIRMED | CLEAR | INCONCLUSIVE
+
 Only CONFIRMED sets is_halted. Note is non-binding for equivalence.
 
 ## Integration
+
 if haltgate.view().is_halted(target_id):
     revert
 
@@ -61,4 +61,4 @@ if haltgate.view().is_halted(target_id):
 
 ## Live verification
 
-See verification/studionet-e2e.md.
+See verification/studionet-e2e.md for addresses and receipts.

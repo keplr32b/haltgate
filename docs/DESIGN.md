@@ -59,14 +59,14 @@ if haltgate.view().is_halted(target_id):
     revert
 ```
 
-##Non-goals
+## Non-goals
 
 - Forcing non-integrating contracts
 - Multi-sig council as core (challenge is evidence + consensus)
 - Global hack radar / unlimited URLs
 - Mainnet SLA without audit and real integrators
 
-##Limits
+## Limits
 
 - Studionet demo; challenge window 300s for demo
 - Owner controls hosts, registration, and ops clear

@@ -15,7 +15,7 @@ HaltGate does **not** forcibly stop arbitrary bytecode. It exposes a consensus-b
 | HaltGate | [`0x577EE00131F183C745e9f9a19B306d7845aF9658`](https://explorer-studio.genlayer.com/address/0x577EE00131F183C745e9f9a19B306d7845aF9658) |
 | Deploy | [`0xb4133350dd0408e3a8a34de65ef61a8b9bce23039f020471b70285f9ba888762`](https://explorer-studio.genlayer.com/tx/0xb4133350dd0408e3a8a34de65ef61a8b9bce23039f020471b70285f9ba888762) |
 | Consumer CLEAR (`vault-1`) | [`0x46CB5F54340Bf5b975330d7611dD0be1Ad7F0927`](https://explorer-studio.genlayer.com/address/0x46CB5F54340Bf5b975330d7611dD0be1Ad7F0927) |
-| Consumer FROZEN (`exploit-freeze-1`) | [`0x49820207488BCF7D2cC50F0D47dee49523da6716`](https://explorer-studio.genlayer.com/address/0x49820207488BCF7D2cC50F0D47dee49523da6716) |
+| Consumer FROZEN (`exploit-freeze-1`) | [`0x49820207488BCF7D2cC50F0D47dee49523da6716`](https://explorer-studio.genlayer.com/address/0x49820207488BCF7D2cC50F0D47dee49523da6716) | Challenge-fix HaltGate | 0x6dBE2C6Cb3590e48C7aF1E3c17462Cd664a9f63F |
 
 Proven on-chain:
 
@@ -51,6 +51,8 @@ Demo: contracts/example_guarded_vault.py (act + withdraw both gated).
 ## Design
 
 docs/DESIGN.md: https://github.com/keplr32b/haltgate/blob/main/docs%2FDESIGN.md
+
+Challenge: only CLEAR or owner_clear_halt lifts a halt. INCONCLUSIVE on challenge preserves is_halted (and the open challenge window until CLEAR, CONFIRMED-finalize, or window end + finalize_halt).
 
 ## Who uses this
 

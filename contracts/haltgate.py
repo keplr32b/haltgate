@@ -2,6 +2,9 @@
 """
 HaltGate — evidence-gated emergency halt for GenLayer (Autonomous Protocols).
 Dual-source evidence, challenge window, watch recheck, owner clear (ops).
+
+Challenge rule: only CLEAR (or owner_clear_halt) lifts a halt.
+INCONCLUSIVE on challenge preserves halt and challenge window state.
 """
 
 from genlayer import *
@@ -195,6 +198,7 @@ class HaltGate(gl.Contract):
         return {"verdict": verdict, "note": note}
 
     def _apply_verdict(self, tid: str, verdict: str, note: str, open_challenge: bool) -> str:
+        """First adjudicate / recheck: CONFIRMED halts; CLEAR/INCONCLUSIVE do not."""
         self.verdict_of[tid] = verdict
         self.note_of[tid] = note
         self.adjudicated_of[tid] = True
@@ -211,6 +215,29 @@ class HaltGate(gl.Contract):
             self.halted_of[tid] = False
             self.challenge_open_of[tid] = False
             self.finalized_of[tid] = False
+        return verdict
+
+    def _apply_challenge_verdict(self, tid: str, verdict: str, note: str) -> str:
+        """
+        Challenge on an already-halted target.
+        Only CLEAR lifts the halt. INCONCLUSIVE preserves halt and window.
+        CONFIRMED keeps halt and closes the challenge as finalized.
+        """
+        self.verdict_of[tid] = verdict
+        self.note_of[tid] = note
+        self.adjudicated_of[tid] = True
+        if verdict == "CLEAR":
+            self.halted_of[tid] = False
+            self.challenge_open_of[tid] = False
+            self.finalized_of[tid] = False
+        elif verdict == "CONFIRMED":
+            self.halted_of[tid] = True
+            self.challenge_open_of[tid] = False
+            self.finalized_of[tid] = True
+        else:
+            # INCONCLUSIVE: empty / unavailable / unusable — do not unhalt
+            self.halted_of[tid] = True
+            # challenge_open_of and challenge_deadline_of unchanged
         return verdict
 
     @gl.public.write
@@ -254,7 +281,7 @@ class HaltGate(gl.Contract):
         require(self.allowed_hosts.get(host, False) is True, "host not allowed: " + host)
         criteria = self.criteria_of.get(tid, "")
         result = self._run_judgment(criteria, [u])
-        return self._apply_verdict(tid, result["verdict"], result["note"], open_challenge=False)
+        return self._apply_challenge_verdict(tid, result["verdict"], result["note"])
 
     @gl.public.write
     def finalize_halt(self, target_id: str) -> None:
@@ -316,11 +343,6 @@ class HaltGate(gl.Contract):
                 "finalized": bool(self.finalized_of.get(tid, False)),
             }
         )
-
-    @gl.public.view
-    def is_host_allowed(self, host: str) -> bool:
-        h = (host or "").strip().lower()
-        return self.allowed_hosts.get(h, False) is True
 
     @gl.public.view
     def get_owner(self) -> Address:
